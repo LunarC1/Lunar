@@ -46,12 +46,32 @@ class Drivetrain{
         float rpm;
 };
 
+struct turnHeadingParams{
+    float maxspeed = 127;
+    float minspeed = 0;
+    bool forwards = true;
+};
+
+struct moveDistParams{
+    float maxspeed = 127;
+    float minspeed = 0;
+    bool forwards = true;
+};
+
 class Chassis{
     public:
         Chassis(Drivetrain drivetrain, Sensors sensors, Constraints lateralSettings, Constraints angularSettings);
         
+        int leftDist;
+        int rightDist;
+
+        void callibrate();
+        void set(float angle);
+
         void tank(float leftVolt, float rightVolt);
         void arcade(float throttle, float turn);
+
+        void driveDist(float dist, float heading);
 
         PID lateralPID;
         PID angularPID;

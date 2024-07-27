@@ -10,7 +10,7 @@ pros::Imu imu(10);
 pros::Motor intakebot(8);
 pros::Motor intaketop(-7);
 
-pros::ADIDigitalOut mogo('A');
+pros::adi::DigitalOut mogo('A');
 
 lunar::Drivetrain drivetrain(&leftMotors, // left motor group
                               &rightMotors, // right motor group
@@ -53,24 +53,30 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous() {}
+void autonomous() {
+	chassis.set(0);
+	chassis.driveDist(24,0);
+}
 
 void opcontrol() {
 	bool mogoc = false;
-	while(1){
-		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-            mogoc = !mogoc; 
-            mogo.set_value(mogoc);
-        }
-		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) intaketop.move(127);
-		else intaketop.move(0);
-		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) intakebot.move(127);
-		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) intakebot.move(-127);
-		else intakebot.move(0);
 
+	while(1){
 		int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
 		chassis.arcade(leftY,rightX);
+
+		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+            mogoc = !mogoc; 
+            mogo.set_value(mogoc);
+        }
+		
+		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) intaketop.move(127);
+		else intaketop.move(0);
+
+		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) intakebot.move(127);
+		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) intakebot.move(-127);
+		else intakebot.move(0);
 	}
 }

@@ -75,11 +75,11 @@
             "-funwind-tables",
             "--std=gnu++20",
             "-o",
-            "bin/lunar/chassis.cpp.o",
-            "src\\lunar\\chassis.cpp"
+            "bin/lunar/PID.cpp.o",
+            "src\\lunar\\PID.cpp"
         ],
         "directory": "D:\\pros\\Lunar",
-        "file": "src\\lunar\\chassis.cpp"
+        "file": "src\\lunar\\PID.cpp"
     },
     {
         "arguments": [
@@ -116,11 +116,11 @@
             "-funwind-tables",
             "--std=gnu++20",
             "-o",
-            "bin/lunar/PID.cpp.o",
-            "src\\lunar\\PID.cpp"
+            "bin/lunar/chassis.cpp.o",
+            "src\\lunar\\chassis.cpp"
         ],
         "directory": "D:\\pros\\Lunar",
-        "file": "src\\lunar\\PID.cpp"
+        "file": "src\\lunar\\chassis.cpp"
     },
     {
         "arguments": [
