@@ -57,7 +57,6 @@ float PID::update(float error){
 
 void PID::reset(){
     time_spent_running = 0;
-    
 }
 
 bool PID::is_settled(){

@@ -3,3 +3,4 @@
 #include "lunar/PID.hpp" // IWYU pragma: keep
 #include "lunar/chassis.hpp"
 #include "lunar/util.hpp"
+#include "lunar/autons.hpp"

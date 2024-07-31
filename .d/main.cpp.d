@@ -131,7 +131,8 @@ bin/main.cpp.o: src/main.cpp include/main.h include/api.h \
  include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
  include/pros/vision.h include/lunar/api.hpp include/lunar/PID.hpp \
  include/lunar/chassis.hpp include/pros/imu.hpp \
- include/pros/motor_group.hpp include/lunar/util.hpp
+ include/pros/motor_group.hpp include/lunar/util.hpp \
+ include/lunar/autons.hpp
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -352,3 +353,4 @@ include/lunar/chassis.hpp:
 include/pros/imu.hpp:
 include/pros/motor_group.hpp:
 include/lunar/util.hpp:
+include/lunar/autons.hpp:

@@ -38,12 +38,12 @@ class Constraints{
 class Drivetrain{
     public:
         Drivetrain(pros::MotorGroup* leftMotors, pros::MotorGroup* rightMotors, float trackWidth, float wheelDiameter,
-                float rpm);
+                float gearRatio);
         pros::MotorGroup* leftMotors;
         pros::MotorGroup* rightMotors; 
         float trackWidth;
         float wheelDiameter;
-        float rpm;
+        float gearRatio;
 };
 
 struct turnHeadingParams{
@@ -60,25 +60,30 @@ struct moveDistParams{
 
 class Chassis{
     public:
-        Chassis(Drivetrain drivetrain, Sensors sensors, Constraints lateralSettings, Constraints angularSettings);
+        Chassis(Drivetrain drivetrain, Sensors sensors, Constraints lateralSettings, Constraints angularSettings, Constraints swingSettings);
         
         int leftDist;
         int rightDist;
 
         void callibrate();
-        void set(float angle);
+        void setHeading(float angle);
 
         void tank(float leftVolt, float rightVolt);
         void arcade(float throttle, float turn);
 
         void driveDist(float dist, float heading);
+        void turnHeading(float heading);
+        void lSwing(float angle);
+        void rSwing(float angle);
 
         PID lateralPID;
         PID angularPID;
+        PID swingPID;
 
     protected:
         Constraints lateralSettings;
         Constraints angularSettings;
+        Constraints swingSettings;
         Drivetrain drivetrain;
         Sensors sensors;
 };
