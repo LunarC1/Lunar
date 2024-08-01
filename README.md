@@ -4,6 +4,7 @@
 Welcome to LunarLib! This PROS Template is still under development.
 
 ## Features
+- Supports Custom Path Planner
 - Generic PID class
 - Drive Distance with heading correction
 - Turn to face heading
