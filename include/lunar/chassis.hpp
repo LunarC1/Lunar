@@ -75,6 +75,7 @@ class Chassis{
 
         void tank(float leftVolt, float rightVolt);
         void arcade(float throttle, float turn);
+        void arcadeCurve(float throttle, float turn, float lScale = 10, float rScale = 10);
 
         void driveDist(float dist, float heading, float minspeed, float maxspeed);
         void turnHeading(float heading, float minspeed, float maxspeed);

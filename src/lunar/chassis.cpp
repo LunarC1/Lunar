@@ -42,9 +42,14 @@ void lunar::Chassis::tank(float leftVolt, float rightVolt){
 }
 
 void lunar::Chassis::arcade(float throttle, float turn){
-    float leftVolt = throttle + turn;
-    float rightVolt = throttle - turn;
+    float leftVolt = (throttle + turn);
+    float rightVolt = (throttle + turn);
+    tank(leftVolt, rightVolt);
+}
 
+void lunar::Chassis::arcadeCurve(float throttle, float turn, float lScale = 10, float rScale = 10){
+    float leftVolt =  (powf(2.718, -(lScale / 10)) + powf(2.718, (fabs(lScale) - 127) / 10) * (1 - powf(2.718, -(lScale / 10)))) * (throttle + turn);
+    float rightVolt =  (powf(2.718, -(rScale / 10)) + powf(2.718, (fabs(rScale) - 127) / 10) * (1 - powf(2.718, -(rScale / 10)))) * (throttle + turn);
     tank(leftVolt, rightVolt);
 }
 

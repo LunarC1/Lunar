@@ -64,18 +64,6 @@ lunar::Constraints swingController(3, // proportional gain (kP)
 );
 
 lunar::Chassis chassis(drivetrain, sensors, lateralController, angularController, swingController);
-
-// Drive Curve
-int curveA3(float input, float curveScale){
-	int retVal = (powf(2.718, -(curveScale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(curveScale / 10)))) * input;
-	return retVal;
-}
-
-int curveA1(float input, float curveScale){
-  	int retVal = (powf(2.718, -(curveScale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(curveScale / 10)))) * input;
-	return retVal;
-}
-
 // Different Autons
 void driveTest(){
 	chassis.setHeading(0);
@@ -216,7 +204,7 @@ void opcontrol() {
 		int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-		chassis.arcade(curveA3(leftY,leftCurveScale),curveA1(rightX,RightCurveScale)); // Arcade drive
+		chassis.arcadeCurve(leftY,rightX,leftCurveScale,RightCurveScale); // Arcade drive
 
 
 /*   /$$$$$$$  /$$$$$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$   /$$
