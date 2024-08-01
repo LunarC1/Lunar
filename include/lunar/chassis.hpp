@@ -75,7 +75,12 @@ class Chassis{
 
         void tank(float leftVolt, float rightVolt);
         void arcade(float throttle, float turn);
-        void arcadeCurve(float throttle, float turn, float lScale = 10, float rScale = 10);
+        void arcadeCurve(float throttle, float turn, float lScale, float rScale);
+
+        void chain();
+        void coast();
+        void hold(bool L, bool R);
+        void brake();
 
         void driveDist(float dist, float heading, float minspeed, float maxspeed);
         void turnHeading(float heading, float minspeed, float maxspeed);
@@ -83,10 +88,6 @@ class Chassis{
         void rSwing(float angle);
 
         void diff(float vL, float vR, float timeout);
-
-        void chain();
-        // void coast();
-        void hold();
 
         PID lateralPID;
         PID angularPID;

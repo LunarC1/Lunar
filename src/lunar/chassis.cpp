@@ -43,19 +43,50 @@ void lunar::Chassis::tank(float leftVolt, float rightVolt){
 
 void lunar::Chassis::arcade(float throttle, float turn){
     float leftVolt = (throttle + turn);
-    float rightVolt = (throttle + turn);
+    float rightVolt = (throttle - turn);
     tank(leftVolt, rightVolt);
 }
 
 void lunar::Chassis::arcadeCurve(float throttle, float turn, float lScale = 10, float rScale = 10){
-    float leftVolt =  (powf(2.718, -(lScale / 10)) + powf(2.718, (fabs(lScale) - 127) / 10) * (1 - powf(2.718, -(lScale / 10)))) * (throttle + turn);
-    float rightVolt =  (powf(2.718, -(rScale / 10)) + powf(2.718, (fabs(rScale) - 127) / 10) * (1 - powf(2.718, -(rScale / 10)))) * (throttle + turn);
+    float leftVolt =  ((powf(2.718, -(lScale / 10)) + powf(2.718, (fabs(lScale) - 127) / 10) * (1 - powf(2.718, -(lScale / 10))))) * (throttle + turn);
+    float rightVolt =  ((powf(2.718, -(rScale / 10)) + powf(2.718, (fabs(rScale) - 127) / 10) * (1 - powf(2.718, -(rScale / 10))))) * (throttle - turn);
     tank(leftVolt, rightVolt);
 }
 
 // void lunar::Chassis::driveDist(float dist){
 //     driveDist(dist,lunar::Sensors::imu->heading());
 // }
+
+
+void lunar::Chassis::chain(){
+  drivetrain.leftMotors->move(0);
+  drivetrain.rightMotors->move(0);
+}
+
+void lunar::Chassis::coast(){
+  drivetrain.leftMotors->set_brake_mode_all(pros::v5::MotorBrake::coast);
+  drivetrain.rightMotors->set_brake_mode_all(pros::v5::MotorBrake::coast);
+  drivetrain.leftMotors->brake();
+  drivetrain.rightMotors->brake();
+}
+
+void lunar::Chassis::hold(bool L = 1, bool R = 1){
+  if(L == 1) { drivetrain.leftMotors->set_brake_mode_all(pros::v5::MotorBrake::hold); drivetrain.leftMotors->brake(); }
+  else if(R == 1) { drivetrain.rightMotors->set_brake_mode_all(pros::v5::MotorBrake::hold); drivetrain.rightMotors->brake(); }
+  else { 
+    drivetrain.leftMotors->set_brake_mode_all(pros::v5::MotorBrake::hold);
+    drivetrain.rightMotors->set_brake_mode_all(pros::v5::MotorBrake::hold);
+    drivetrain.leftMotors->brake();
+    drivetrain.rightMotors->brake(); 
+  }
+}
+
+void lunar::Chassis::brake(){
+  drivetrain.leftMotors->set_brake_mode_all(pros::v5::MotorBrake::brake);
+  drivetrain.rightMotors->set_brake_mode_all(pros::v5::MotorBrake::brake);
+  drivetrain.leftMotors->brake();
+  drivetrain.rightMotors->brake();
+}
 
 void lunar::Chassis::driveDist(float dist, float heading, float minspeed, float maxspeed){
     lunar::Chassis::leftDist = drivetrain.leftMotors->get_position()*drivetrain.gearRatio;
@@ -119,14 +150,4 @@ void lunar::Chassis::diff(float vL, float vR, float timeout){
   pros::delay(timeout);
   drivetrain.leftMotors->move(0);
   drivetrain.rightMotors->move(0);
-}
-
-void lunar::Chassis::chain(){
-  drivetrain.leftMotors->move(0);
-  drivetrain.rightMotors->move(0);
-}
-
-void lunar::Chassis::hold(){
-  drivetrain.leftMotors->brake();
-  drivetrain.rightMotors->brake();
 }

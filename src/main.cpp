@@ -20,6 +20,8 @@ pros::Motor intakebot(8);
 pros::Motor intaketop(-7);
 
 pros::adi::DigitalOut mogo('A');
+pros::adi::DigitalOut stick('B');
+pros::adi::DigitalOut claw('C');
 
 pros::adi::DigitalIn limitSwitch('F');
 
@@ -90,16 +92,16 @@ void test(){
 // Pos Red, Neg Red, Pos Blue, Neg Blue, Skills
 
 void posRed(){
-
+	chassis.setHeading(0);
 }
 void negRed(){
-	
+	chassis.setHeading(0);
 }
 void posBlue(){
-	
+	chassis.setHeading(0);
 }
 void negBlue(){
-	
+	chassis.setHeading(0);
 }
 
 int autonState = 0; 
@@ -187,8 +189,10 @@ void autonomous() {
 
 void opcontrol() {
 	bool mogoc = false;
-	double leftCurveScale = 10; // 10 is default
-	double RightCurveScale = 10; // 10 is default
+	bool clawc = false;
+	bool stickc = false;
+	double leftCurveScale = 0.5; // Left Curve with curve of 10
+	double RightCurveScale = 0.5; // Right Curve with curve of 10
 
 	while(1){
 
@@ -204,7 +208,8 @@ void opcontrol() {
 		int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-		chassis.arcadeCurve(leftY,rightX,leftCurveScale,RightCurveScale); // Arcade drive
+		chassis.arcadeCurve(leftY,rightX,leftCurveScale,RightCurveScale); // Arcade drive with drive curves
+		// chassis.arcade(leftY,rightX); // Arcade drive with drive curves
 
 
 /*   /$$$$$$$  /$$$$$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$   /$$
@@ -223,9 +228,16 @@ void opcontrol() {
             mogo.set_value(mogoc);
         }
 
-		// Intake Hook
-
-		// 
+		// Stick
+		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+            stickc = !stickc; 
+            stick.set_value(stickc);
+        }
+		// Stick
+		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+            clawc = !clawc; 
+            claw.set_value(clawc);
+        }
 		
 /*   /$$      /$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$$ 
 	| $$$    /$$$ /$$__  $$|__  $$__//$$__  $$| $$__  $$
