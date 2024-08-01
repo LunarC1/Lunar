@@ -52,7 +52,7 @@ void lunar::Chassis::arcade(float throttle, float turn){
 //     driveDist(dist,lunar::Sensors::imu->heading());
 // }
 
-void lunar::Chassis::driveDist(float dist, float heading){
+void lunar::Chassis::driveDist(float dist, float heading, float minspeed, float maxspeed){
     lunar::Chassis::leftDist = drivetrain.leftMotors->get_position()*drivetrain.gearRatio;
     lunar::Chassis::rightDist = drivetrain.rightMotors->get_position()*drivetrain.gearRatio;
     float start_average_position = (lunar::Chassis::leftDist+lunar::Chassis::rightDist)/2.0;
@@ -63,6 +63,8 @@ void lunar::Chassis::driveDist(float dist, float heading){
         float heading_error = reduce_negative_180_to_180(heading - sensors.imu->get_heading());
         float drive_output = lateralPID.update(drive_error);
         float heading_output = angularPID.update(heading_error);
+        drive_output = clamp(drive_output,minspeed,maxspeed);
+        heading_output = clamp(heading_output,minspeed,maxspeed);
         drivetrain.leftMotors->move(drive_output+heading_output);
         drivetrain.rightMotors->move(drive_output-heading_output);
         pros::delay(10);
@@ -71,11 +73,12 @@ void lunar::Chassis::driveDist(float dist, float heading){
     drivetrain.rightMotors->move(0);
 }
 
-void lunar::Chassis::turnHeading(float angle){
+void lunar::Chassis::turnHeading(float angle, float minspeed, float maxspeed){
     while(angularPID.is_settled() == false){
         float error = reduce_negative_180_to_180(angle - sensors.imu->get_heading());
         // printf("Heading: ",sensors.imu->get_heading());
         float output = angularPID.update(error);
+        output = clamp(output,minspeed,maxspeed);
         // output = clamp(output, -turn_max_voltage, turn_max_voltage);
         drivetrain.leftMotors->move(-output);
         drivetrain.rightMotors->move(output);
@@ -103,4 +106,22 @@ void lunar::Chassis::rSwing(float angle){
     drivetrain.rightMotors->move(output);
     pros::delay(10);
   }
+}
+
+void lunar::Chassis::diff(float vL, float vR, float timeout){
+  drivetrain.leftMotors->move(vL);
+  drivetrain.rightMotors->move(vR);
+  pros::delay(timeout);
+  drivetrain.leftMotors->move(0);
+  drivetrain.rightMotors->move(0);
+}
+
+void lunar::Chassis::chain(){
+  drivetrain.leftMotors->move(0);
+  drivetrain.rightMotors->move(0);
+}
+
+void lunar::Chassis::hold(){
+  drivetrain.leftMotors->brake();
+  drivetrain.rightMotors->brake();
 }

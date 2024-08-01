@@ -71,10 +71,16 @@ class Chassis{
         void tank(float leftVolt, float rightVolt);
         void arcade(float throttle, float turn);
 
-        void driveDist(float dist, float heading);
-        void turnHeading(float heading);
+        void driveDist(float dist, float heading, float minspeed, float maxspeed);
+        void turnHeading(float heading, float minspeed, float maxspeed);
         void lSwing(float angle);
         void rSwing(float angle);
+
+        void diff(float vL, float vR, float timeout);
+
+        void chain();
+        // void coast();
+        void hold();
 
         PID lateralPID;
         PID angularPID;

@@ -21,6 +21,8 @@ pros::Motor intaketop(-7);
 
 pros::adi::DigitalOut mogo('A');
 
+pros::adi::DigitalIn limitSwitch('F');
+
 lunar::Drivetrain drivetrain(&leftMotors, // Left motor group
                               &rightMotors, // Right motor group
                               12.8, // Track width
@@ -66,11 +68,11 @@ lunar::Chassis chassis(drivetrain, sensors, lateralController, angularController
 
 void driveTest(){
 	chassis.setHeading(0);
-    chassis.driveDist(24,0);
+    chassis.driveDist(24,0,0,127);
 }
 void turnTest(){
 	chassis.setHeading(0);
-	chassis.turnHeading(90);
+	chassis.turnHeading(90,0,127);
 }
 void swingTest(){
 	chassis.setHeading(0);
@@ -80,10 +82,55 @@ void swingTest(){
 void odomTest(){
 	chassis.setHeading(0);
 }
+void skills(){
+	chassis.setHeading(0);
+}
+void test(){
+	chassis.setHeading(0);
+}
 
+
+int autonState = 0; 
+
+void autonSelect(){
+    while (true){
+        pros::delay(20);
+        if(limitSwitch.get_new_press()){
+            autonState ++; 
+            if (autonState>5){
+                autonState = 0; 
+            }
+        }
+	switch(autonState){
+		case 0: 
+			pros::lcd::set_text(2, "Drive Test");
+			break;
+		case 1: 
+			pros::lcd::set_text(2, "Turn Test");
+			break;
+		case 2: 
+			pros::lcd::set_text(2, "Swing Test");
+			break;
+		case 3: 
+			pros::lcd::set_text(2, "Odom Test");
+			break;
+		case 4: 
+			pros::lcd::set_text(2, "Skills");
+			break;
+		case 5: 
+			pros::lcd::set_text(2, "Overall Test");
+			break;
+		default: 
+			pros::lcd::set_text(2, "AUTON");
+			break;     
+        }
+    }
+
+}
 
 void initialize() {
 	pros::lcd::initialize();
+	pros::Task select(autonSelect);
 }
 
 void disabled() {}
@@ -100,12 +147,38 @@ void autonomous() {
 	| $$  | $$| $$  | $$   | $$  | $$  | $$| $$\  $$$
 	| $$  | $$|  $$$$$$/   | $$  |  $$$$$$/| $$ \  $$
 	|__/  |__/ \______/    |__/   \______/ |__/  \__/    */  
-                                                     
+
+	// Path names
+	// Pos Red, Neg Red, Pos Blue, Neg Blue, Skills
+	
 	chassis.setHeading(0);
-	chassis.driveDist(24,0);
+	chassis.driveDist(24,0,0,127);
+	pros::delay(10000000);
 	// chassis.turnHeading(90);
 	// chassis.lSwing(90);
 	// chassis.rSwing(90);
+	switch(autonState){
+		case 0: 
+			driveTest(); 
+			break;
+		case 1: 
+			turnTest(); 
+			break;
+		case 2: 
+			swingTest();  
+			break;
+		case 3: 
+			odomTest(); 
+			break;
+		case 4: 
+			skills(); 
+			break;
+		case 5:
+			test();
+			break; 
+		default: 
+			break;
+    }
 }
 
 void opcontrol() {
