@@ -65,7 +65,18 @@ lunar::Constraints swingController(3, // proportional gain (kP)
 
 lunar::Chassis chassis(drivetrain, sensors, lateralController, angularController, swingController);
 
+// Drive Curve
+int curveA3(float input, float curveScale){
+	int retVal = (powf(2.718, -(curveScale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(curveScale / 10)))) * input;
+	return retVal;
+}
 
+int curveA1(float input, float curveScale){
+  	int retVal = (powf(2.718, -(curveScale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(curveScale / 10)))) * input;
+	return retVal;
+}
+
+// Different Autons
 void driveTest(){
 	chassis.setHeading(0);
     chassis.driveDist(24,0,0,127);
@@ -88,19 +99,25 @@ void skills(){
 void test(){
 	chassis.setHeading(0);
 }
+// Pos Red, Neg Red, Pos Blue, Neg Blue, Skills
 
+void posRed(){
+
+}
+void negRed(){
+	
+}
+void posBlue(){
+	
+}
+void negBlue(){
+	
+}
 
 int autonState = 0; 
 
 void autonSelect(){
-    while (true){
-        pros::delay(20);
-        if(limitSwitch.get_new_press()){
-            autonState ++; 
-            if (autonState>5){
-                autonState = 0; 
-            }
-        }
+    while (1){ pros::delay(20); if(limitSwitch.get_new_press()){ autonState ++; if(autonState>5){ autonState = 0; } }
 	switch(autonState){
 		case 0: 
 			pros::lcd::set_text(2, "Drive Test");
@@ -125,7 +142,6 @@ void autonSelect(){
 			break;     
         }
     }
-
 }
 
 void initialize() {
@@ -183,6 +199,8 @@ void autonomous() {
 
 void opcontrol() {
 	bool mogoc = false;
+	double leftCurveScale = 10; // 10 is default
+	double RightCurveScale = 10; // 10 is default
 
 	while(1){
 
@@ -198,7 +216,7 @@ void opcontrol() {
 		int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-		chassis.arcade(leftY,rightX);
+		chassis.arcade(curveA3(leftY,leftCurveScale),curveA1(rightX,RightCurveScale)); // Arcade drive
 
 
 /*   /$$$$$$$  /$$$$$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$   /$$
@@ -241,6 +259,6 @@ void opcontrol() {
 
 		// Wall Stakes Motor
 
-
+		pros::delay(10);
 	}
 }

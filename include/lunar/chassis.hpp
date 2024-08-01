@@ -58,6 +58,11 @@ struct moveDistParams{
     bool forwards = true;
 };
 
+struct swingParams{
+    float maxspeed = 127;
+    float minspeed = 0;
+};
+
 class Chassis{
     public:
         Chassis(Drivetrain drivetrain, Sensors sensors, Constraints lateralSettings, Constraints angularSettings, Constraints swingSettings);
