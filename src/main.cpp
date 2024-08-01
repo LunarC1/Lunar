@@ -1,5 +1,5 @@
 #include "main.h"
-#include "lunar/api.hpp" 
+#include "lunar/api.hpp"  
 
 /*	 /$$$$$$  /$$$$$$$$ /$$$$$$$$ /$$   /$$ /$$$$$$$ 
 	/$$__  $$| $$_____/|__  $$__/| $$  | $$| $$__  $$
@@ -15,6 +15,7 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 pros::MotorGroup leftMotors({-13, -14, -15}, pros::MotorGearset::blue); // Left motor group - ports 13 (reversed), 14 (reversed), 15 (reversed)
 pros::MotorGroup rightMotors({16, 17, 18}, pros::MotorGearset::blue); // Right motor group - ports 16, 17, 18
 
+// NOT PART OF TEMPLATE (Start)
 pros::Imu imu(12);
 pros::Motor intakebot(8);
 pros::Motor intaketop(-7);
@@ -24,6 +25,7 @@ pros::adi::DigitalOut stick('B');
 pros::adi::DigitalOut claw('C');
 
 pros::adi::DigitalIn limitSwitch('F');
+// NOT PART OF TEMPLATE (End)
 
 lunar::Drivetrain drivetrain(&leftMotors, // Left motor group
                               &rightMotors, // Right motor group
@@ -66,31 +68,12 @@ lunar::Constraints swingController(3, // proportional gain (kP)
 );
 
 lunar::Chassis chassis(drivetrain, sensors, lateralController, angularController, swingController);
-// Different Autons
-void driveTest(){
-	chassis.setHeading(0);
-    chassis.driveDist(24,0,0,127);
-}
-void turnTest(){
-	chassis.setHeading(0);
-	chassis.turnHeading(90,0,127);
-}
-void swingTest(){
-	chassis.setHeading(0);
-	chassis.lSwing(90);
-	chassis.rSwing(0);
-}
-void odomTest(){
-	chassis.setHeading(0);
-}
-void skills(){
-	chassis.setHeading(0);
-}
+
+// Path names: 
+// Test, Pos Red, Neg Red, Pos Blue, Neg Blue, Skills
 void test(){
 	chassis.setHeading(0);
 }
-// Pos Red, Neg Red, Pos Blue, Neg Blue, Skills
-
 void posRed(){
 	chassis.setHeading(0);
 }
@@ -103,29 +86,33 @@ void posBlue(){
 void negBlue(){
 	chassis.setHeading(0);
 }
+void skills(){
+	chassis.setHeading(0);
+}
 
 int autonState = 0; 
 
+// Auton Selector
 void autonSelect(){
     while (1){ pros::delay(20); if(limitSwitch.get_new_press()){ autonState ++; if(autonState>5){ autonState = 0; } }
 	switch(autonState){
 		case 0: 
-			pros::lcd::set_text(2, "Drive Test");
+			pros::lcd::set_text(2, "Testing");
 			break;
 		case 1: 
-			pros::lcd::set_text(2, "Turn Test");
+			pros::lcd::set_text(2, "Positive Red");
 			break;
 		case 2: 
-			pros::lcd::set_text(2, "Swing Test");
+			pros::lcd::set_text(2, "Negative Red");
 			break;
 		case 3: 
-			pros::lcd::set_text(2, "Odom Test");
+			pros::lcd::set_text(2, "Positive Blue");
 			break;
 		case 4: 
-			pros::lcd::set_text(2, "Skills");
+			pros::lcd::set_text(2, "Negative Blue");
 			break;
 		case 5: 
-			pros::lcd::set_text(2, "Overall Test");
+			pros::lcd::set_text(2, "Skills");
 			break;
 		default: 
 			pros::lcd::set_text(2, "AUTON");
@@ -154,33 +141,33 @@ void autonomous() {
 	| $$  | $$|  $$$$$$/   | $$  |  $$$$$$/| $$ \  $$
 	|__/  |__/ \______/    |__/   \______/ |__/  \__/    */  
 
-	// Path names
-	// Pos Red, Neg Red, Pos Blue, Neg Blue, Skills
-	
+	// NOT PART OF TEMPLATE (Start)
 	chassis.setHeading(0);
 	chassis.driveDist(24,0,0,127);
 	pros::delay(10000000);
 	// chassis.turnHeading(90);
 	// chassis.lSwing(90);
 	// chassis.rSwing(90);
+	// NOT PART OF TEMPLATE (End)
+
 	switch(autonState){
 		case 0: 
-			driveTest(); 
+			test(); 
 			break;
 		case 1: 
-			turnTest(); 
+			posRed(); 
 			break;
 		case 2: 
-			swingTest();  
+			negRed();  
 			break;
 		case 3: 
-			odomTest(); 
+			posBlue(); 
 			break;
 		case 4: 
-			skills(); 
+			negBlue(); 
 			break;
 		case 5:
-			test();
+			skills();
 			break; 
 		default: 
 			break;
@@ -191,8 +178,8 @@ void opcontrol() {
 	bool mogoc = false;
 	bool clawc = false;
 	bool stickc = false;
-	double leftCurveScale = 0.5; // Left Curve with curve of 10
-	double RightCurveScale = 0.5; // Right Curve with curve of 10
+	double leftCurveScale = 0.5; // Left Curve with curve of 0.5
+	double RightCurveScale = 0.5; // Right Curve with curve of 0.5
 
 	while(1){
 
