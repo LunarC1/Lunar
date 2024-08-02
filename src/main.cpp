@@ -35,7 +35,11 @@ lunar::Drivetrain drivetrain(&leftMotors, // Left motor group
 							  (36/48) // Gear ratio
 );
 
-lunar::Sensors sensors(&imu // inertial sensor
+lunar::Sensors sensors(&imu, // inertial sensor
+					   nullptr,
+					   nullptr,
+					   nullptr,
+					   nullptr
 );
 
 // lateral motion controller

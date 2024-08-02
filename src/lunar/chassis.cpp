@@ -5,9 +5,15 @@
 #include "lunar/chassis.hpp"
 #include "pros/rtos.hpp"
 #include "lunar/api.hpp"
+#include "lunar/trackingWheel.hpp"
 
-lunar::Sensors::Sensors(pros::Imu* imu)
-    : imu(imu) {}
+lunar::Sensors::Sensors(pros::Imu* imu, TrackingWheel* vertical1, TrackingWheel* vertical2, TrackingWheel* horizontal1,
+                                 TrackingWheel* horizontal2)
+    : imu(imu),
+      vertical1(vertical1),
+      vertical2(vertical2),
+      horizontal1(horizontal1),
+      horizontal2(horizontal2){}
 
 lunar::Drivetrain::Drivetrain(pros::MotorGroup* leftMotors, pros::MotorGroup* rightMotors, float trackWidth, float wheelDiameter, float gearRatio)
     : leftMotors(leftMotors),

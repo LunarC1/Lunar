@@ -5,6 +5,7 @@
 
 #include "lunar/PID.hpp"
 #include "pros/motor_group.hpp"
+#include "lunar/trackingWheel.hpp"
 
 #include <string>
 
@@ -12,8 +13,13 @@ namespace lunar{
 
 class Sensors{
     public:
-        Sensors(pros::Imu* imu);
+        Sensors(pros::Imu* imu, TrackingWheel* vertical1, TrackingWheel* vertical2, TrackingWheel* horizontal1,
+                    TrackingWheel* horizontal2);
         pros::Imu* imu;
+        TrackingWheel* vertical1;
+        TrackingWheel* vertical2;
+        TrackingWheel* horizontal1;
+        TrackingWheel* horizontal2;
 };
 
 class Constraints{
