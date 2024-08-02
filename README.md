@@ -6,13 +6,14 @@ Welcome to LunarLib! This PROS Template is still under development.
 ## Features
 - Supports Custom Path Planner
 - Generic PID class
-- Drive Distance with heading correction
-- Turn to face heading
-- Swing to face heading 
+- Motion Chaining
+  - Drive Distance with heading correction
+  - Turn to face heading
+  - Swing to face heading 
 - Driver Control
   - Customizable Drive Curves
   - Arcade control w/wo Curves
-  - Tank control w/wo Curves
+  - Tank control w/wo Curves (Why would you do this)
 - Autonomous Selector
 
 ## Coming Soon (In Order)

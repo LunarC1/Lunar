@@ -13,3 +13,5 @@ float to_deg(float angle_rad);
 float clamp(float input, float min, float max);
 
 float deadband(float input, float width);
+
+float limit(float input, float min, float max);

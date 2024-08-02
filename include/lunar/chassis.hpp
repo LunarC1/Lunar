@@ -51,21 +51,21 @@ struct turnHeadingParams{
     float minSpeed = 0;
     float maxSpeed = 127;
     float earlyExit = 0;
-    bool forwards = true;
+    // bool forwards = true;
 };
 
 struct driveDistParams{
     float minSpeed = 0;
     float maxSpeed = 127;
     float earlyExit = 0;
-    bool forwards = true;
+    // bool forwards = true;
 };
 
 struct swingParams{
     float maxSpeed = 127;
     float minSpeed = 0;
     float earlyExit = 0;
-    bool forwards = true;
+    // bool forwards = true;
 };
 
 class Chassis{
@@ -81,6 +81,7 @@ class Chassis{
         void tank(float leftVolt, float rightVolt);
         void arcade(float throttle, float turn);
         void arcadeCurve(float throttle, float turn, float lScale, float rScale);
+        void tankCurve(float lV, float rV, float lScale, float rScale);
 
         void chain();
         void coast();
@@ -88,10 +89,11 @@ class Chassis{
         void brake();
         void cancelMotion(std::string type);
 
+        void driveDist(float dist);
         void driveDist(float dist, float heading, driveDistParams params = {}, turnHeadingParams params1 = {});
         void turnHeading(float heading, turnHeadingParams params = {});
-        void lSwing(float angle);
-        void rSwing(float angle);
+        void lSwing(float angle, swingParams params = {});
+        void rSwing(float angle, swingParams params = {});
 
         void diff(float vL, float vR, float timeout);
 

@@ -48,3 +48,12 @@ float deadband(float input, float width){
   }
   return(input);
 }
+
+float limit(float input, float min, float max){
+  if (input > max) input = max;
+  else if (input < -max) input = -max;
+  if (input < 0 && input > -min) input = -min;
+  else if (input > 0 && input < min) input = min;
+
+  return (input);
+}

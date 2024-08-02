@@ -19,6 +19,7 @@ pros::MotorGroup rightMotors({16, 17, 18}, pros::MotorGearset::blue); // Right m
 pros::Imu imu(12);
 pros::Motor intakebot(8);
 pros::Motor intaketop(-7);
+pros::Motor lift(9);
 
 pros::adi::DigitalOut mogo('A');
 pros::adi::DigitalOut stick('B');
@@ -131,7 +132,6 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-
 /*    /$$$$$$  /$$   /$$ /$$$$$$$$ /$$$$$$  /$$   /$$
 	 /$$__  $$| $$  | $$|__  $$__//$$__  $$| $$$  |$$
 	| $$  \ $$| $$  | $$   | $$  | $$  \ $$| $$$$| $$
@@ -143,7 +143,8 @@ void autonomous() {
 
 	// NOT PART OF TEMPLATE (Start)
 	chassis.setHeading(0);
-	chassis.driveDist(24,0, {.earlyExit = 1}); // Early Exit for Motion Chaining
+	chassis.driveDist(24,0);
+	chassis.driveDist(24,0, {.minSpeed = 10, .earlyExit = 1}); // Early Exit for Motion Chaining
 	// pros::delay(10000000);
 	// chassis.turnHeading(90);
 	// chassis.lSwing(90);
@@ -175,9 +176,12 @@ void autonomous() {
 }
 
 void opcontrol() {
+	// Boolean variables for driver control
 	bool mogoc = false;
 	bool clawc = false;
 	bool stickc = false;
+
+	// Drive Curve Settings
 	double leftCurveScale = 0.5; // Left Curve with curve of 0.5
 	double RightCurveScale = 0.5; // Right Curve with curve of 0.5
 
@@ -192,11 +196,11 @@ void opcontrol() {
 	| $$$$$$$/| $$  | $$ /$$$$$$   \  $/   | $$$$$$$$| $$  | $$
 	|_______/ |__/  |__/|______/    \_/    |________/|__/  |__/    */
                                                            
-		int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+		int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y); // Input from Axis 3
+		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); // Input from Axis 1
 
 		chassis.arcadeCurve(leftY,rightX,leftCurveScale,RightCurveScale); // Arcade drive with drive curves
-		// chassis.arcade(leftY,rightX); // Arcade drive with drive curves
+		// chassis.arcade(leftY,rightX); // Arcade drive without drive curves
 
 
 /*   /$$$$$$$  /$$$$$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$   /$$
@@ -220,7 +224,7 @@ void opcontrol() {
             stickc = !stickc; 
             stick.set_value(stickc);
         }
-		// Stick
+		// Claw
 		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
             clawc = !clawc; 
             claw.set_value(clawc);
@@ -235,16 +239,15 @@ void opcontrol() {
 	| $$ \/  | $$|  $$$$$$/   | $$  |  $$$$$$/| $$  | $$
 	|__/     |__/ \______/    |__/   \______/ |__/  |__/    */
                                                     
-		// Hook Motor
-		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) intaketop.move(127);
-		else intaketop.move(0);
-
-		// Flexwheel Motor
-		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) intakebot.move(127);
-		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) intakebot.move(-127);
-		else intakebot.move(0);
+		// Hook + Flexwheel Motors
+		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intaketop.move(127); intakebot.move(127); }
+		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intaketop.move(127);  intakebot.move(-127); }
+		else { intakebot.move(0); intaketop.move(0); }
 
 		// Wall Stakes Motor
+		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { lift.move(127); }
+		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { lift.move(-127); }
+		else { lift.set_brake_mode_all(pros::v5::MotorBrake::hold); lift.brake(); }
 
 		pros::delay(10);
 	}

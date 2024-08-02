@@ -1,5 +1,5 @@
 #pragma once
 
-#include "lunar/PID.hpp" // IWYU pragma: keep
+#include "lunar/PID.hpp"
 #include "lunar/chassis.hpp"
 #include "lunar/util.hpp"
