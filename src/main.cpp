@@ -143,8 +143,8 @@ void autonomous() {
 
 	// NOT PART OF TEMPLATE (Start)
 	chassis.setHeading(0);
-	chassis.driveDist(24,0,0,127);
-	pros::delay(10000000);
+	chassis.driveDist(24,0, {.earlyExit = 1}); // Early Exit for Motion Chaining
+	// pros::delay(10000000);
 	// chassis.turnHeading(90);
 	// chassis.lSwing(90);
 	// chassis.rSwing(90);

@@ -6,6 +6,7 @@
 #include "lunar/PID.hpp"
 #include "pros/motor_group.hpp"
 
+#include <string>
 
 namespace lunar{
 
@@ -47,20 +48,24 @@ class Drivetrain{
 };
 
 struct turnHeadingParams{
-    float maxspeed = 127;
-    float minspeed = 0;
+    float minSpeed = 0;
+    float maxSpeed = 127;
+    float earlyExit = 0;
     bool forwards = true;
 };
 
-struct moveDistParams{
-    float maxspeed = 127;
-    float minspeed = 0;
+struct driveDistParams{
+    float minSpeed = 0;
+    float maxSpeed = 127;
+    float earlyExit = 0;
     bool forwards = true;
 };
 
 struct swingParams{
-    float maxspeed = 127;
-    float minspeed = 0;
+    float maxSpeed = 127;
+    float minSpeed = 0;
+    float earlyExit = 0;
+    bool forwards = true;
 };
 
 class Chassis{
@@ -81,9 +86,10 @@ class Chassis{
         void coast();
         void hold(bool L, bool R);
         void brake();
+        void cancelMotion(std::string type);
 
-        void driveDist(float dist, float heading, float minspeed, float maxspeed);
-        void turnHeading(float heading, float minspeed, float maxspeed);
+        void driveDist(float dist, float heading, driveDistParams params = {}, turnHeadingParams params1 = {});
+        void turnHeading(float heading, turnHeadingParams params = {});
         void lSwing(float angle);
         void rSwing(float angle);
 

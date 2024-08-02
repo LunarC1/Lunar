@@ -38,4 +38,4 @@ Yes, it is required.
 
 _**4. Who wrote this amazing template?**_
 The answer thou seek'st is the goat. The one and only. The Alpha and the Sigma. 
-All jokes aside, message nickson78181a on discord if you have any questions or want to contribute
+All jokes aside, message nickson78181a on discord if you have any questions or want to contribute.

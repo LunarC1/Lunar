@@ -88,7 +88,32 @@ void lunar::Chassis::brake(){
   drivetrain.rightMotors->brake();
 }
 
-void lunar::Chassis::driveDist(float dist, float heading, float minspeed, float maxspeed){
+void lunar::Chassis::cancelMotion(std::string type){
+  if(type == "BRAKE"){
+    drivetrain.leftMotors->set_brake_mode_all(pros::v5::MotorBrake::brake);
+    drivetrain.rightMotors->set_brake_mode_all(pros::v5::MotorBrake::brake);
+    drivetrain.leftMotors->brake();
+    drivetrain.rightMotors->brake();
+  }
+  else if (type == "COAST"){
+    drivetrain.leftMotors->set_brake_mode_all(pros::v5::MotorBrake::coast);
+    drivetrain.rightMotors->set_brake_mode_all(pros::v5::MotorBrake::coast); 
+    drivetrain.leftMotors->brake();
+    drivetrain.rightMotors->brake();
+  }
+  else if (type == "CHAIN"){
+    drivetrain.leftMotors->move(0);
+    drivetrain.rightMotors->move(0);
+  }
+  else if (type == "HOLD"){
+    drivetrain.leftMotors->set_brake_mode_all(pros::v5::MotorBrake::hold);
+    drivetrain.rightMotors->set_brake_mode_all(pros::v5::MotorBrake::hold);
+    drivetrain.leftMotors->brake();
+    drivetrain.rightMotors->brake(); 
+  }
+}
+
+void lunar::Chassis::driveDist(float dist, float heading, driveDistParams params, turnHeadingParams params1){
     lunar::Chassis::leftDist = drivetrain.leftMotors->get_position()*drivetrain.gearRatio;
     lunar::Chassis::rightDist = drivetrain.rightMotors->get_position()*drivetrain.gearRatio;
     float start_average_position = (lunar::Chassis::leftDist+lunar::Chassis::rightDist)/2.0;
@@ -97,31 +122,57 @@ void lunar::Chassis::driveDist(float dist, float heading, float minspeed, float 
         average_position = (lunar::Chassis::leftDist+lunar::Chassis::rightDist)/2.0;
         float drive_error = dist+start_average_position-average_position;
         float heading_error = reduce_negative_180_to_180(heading - sensors.imu->get_heading());
+
+        if (params.minSpeed != 0 && fabs(drive_error) < params.earlyExit) break;
+        else if (params.minSpeed != 0 && fabs(heading_error) < params.earlyExit) break;
+
         float drive_output = lateralPID.update(drive_error);
         float heading_output = angularPID.update(heading_error);
-        drive_output = clamp(drive_output,minspeed,maxspeed);
-        heading_output = clamp(heading_output,minspeed,maxspeed);
+
+        if (drive_output > params.maxSpeed) drive_output = params.maxSpeed;
+        else if (drive_output < -params.maxSpeed) drive_output = -params.maxSpeed;
+        if (drive_output < 0 && drive_output > -params.minSpeed) drive_output = -params.minSpeed;
+        else if (drive_output > 0 && drive_output < params.minSpeed) drive_output = params.minSpeed;
+
+        if (heading_output > params1.maxSpeed) heading_output = params1.maxSpeed;
+        else if (heading_output < -params1.maxSpeed) heading_output = -params1.maxSpeed;
+        if (heading_output < 0 && heading_output > -params1.minSpeed) heading_output = -params1.minSpeed;
+        else if (heading_output > 0 && heading_output < params1.minSpeed) heading_output = params1.minSpeed;
+
+        // drive_output = clamp(drive_output,minspeed,maxspeed);
+        // heading_output = clamp(heading_output,minspeed,maxspeed);
         drivetrain.leftMotors->move(drive_output+heading_output);
         drivetrain.rightMotors->move(drive_output-heading_output);
         pros::delay(10);
     }
-    drivetrain.leftMotors->move(0);
-    drivetrain.rightMotors->move(0);
+    cancelMotion("CHAIN");
+    // drivetrain.leftMotors->move(0);
+    // drivetrain.rightMotors->move(0);
 }
 
-void lunar::Chassis::turnHeading(float angle, float minspeed, float maxspeed){
+void lunar::Chassis::turnHeading(float angle, turnHeadingParams params){
     while(angularPID.is_settled() == false){
         float error = reduce_negative_180_to_180(angle - sensors.imu->get_heading());
         // printf("Heading: ",sensors.imu->get_heading());
+
+        if (params.minSpeed != 0 && fabs(error) < params.earlyExit) break;
+
         float output = angularPID.update(error);
-        output = clamp(output,minspeed,maxspeed);
+
+        // Max / Min Speed
+        if (output > params.maxSpeed) output = params.maxSpeed;
+        else if (output < -params.maxSpeed) output = -params.maxSpeed;
+        if (output < 0 && output > -params.minSpeed) output = -params.minSpeed;
+        else if (output > 0 && output < params.minSpeed) output = params.minSpeed;
+        // output = clamp(output,minspeed,maxspeed);
         // output = clamp(output, -turn_max_voltage, turn_max_voltage);
         drivetrain.leftMotors->move(-output);
         drivetrain.rightMotors->move(output);
         pros::delay(10);
     }
-    drivetrain.leftMotors->move(0);
-    drivetrain.rightMotors->move(0);
+    cancelMotion("CHAIN");
+    // drivetrain.leftMotors->move(0);
+    // drivetrain.rightMotors->move(0);
 }
 
 void lunar::Chassis::lSwing(float angle){
