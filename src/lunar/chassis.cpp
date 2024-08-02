@@ -165,23 +165,31 @@ void lunar::Chassis::turnHeading(float angle, turnHeadingParams params){
 void lunar::Chassis::lSwing(float angle, swingParams params){
   while(swingPID.is_settled() == false){
     float error = reduce_negative_180_to_180(angle - sensors.imu->get_heading());
+
+    if (params.minSpeed != 0 && fabs(error) < params.earlyExit) break;
+
     float output = swingPID.update(error);
     limit(output, params.maxSpeed, params.minSpeed);
     drivetrain.leftMotors->move(output);
     drivetrain.rightMotors->brake();
     pros::delay(10);
   }
+  cancelMotion("CHAIN");
 }
 
 void lunar::Chassis::rSwing(float angle, swingParams params){
   while(swingPID.is_settled() == false){
     float error = reduce_negative_180_to_180(angle - sensors.imu->get_heading());
+
+    if (params.minSpeed != 0 && fabs(error) < params.earlyExit) break;
+    
     float output = swingPID.update(error);
     limit(output, params.maxSpeed, params.minSpeed);
     drivetrain.leftMotors->brake();
     drivetrain.rightMotors->move(output);
     pros::delay(10);
   }
+  cancelMotion("CHAIN");
 }
 
 void lunar::Chassis::diff(float vL, float vR, float timeout){
