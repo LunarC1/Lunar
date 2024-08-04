@@ -78,8 +78,8 @@ class Chassis{
     public:
         Chassis(Drivetrain drivetrain, Sensors sensors, Constraints lateralSettings, Constraints angularSettings, Constraints swingSettings);
         
-        int leftDist;
-        int rightDist;
+        float leftDist = 0;
+        float rightDist = 0;
 
         void callibrate();
         void setHeading(float angle);

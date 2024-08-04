@@ -6,6 +6,7 @@
 #include "pros/rtos.hpp"
 #include "lunar/api.hpp"
 #include "lunar/trackingWheel.hpp"
+#include "main.h"
 
 lunar::Sensors::Sensors(pros::Imu* imu, TrackingWheel* vertical1, TrackingWheel* vertical2, TrackingWheel* horizontal1,
                                  TrackingWheel* horizontal2)
@@ -31,6 +32,9 @@ lunar::Chassis::Chassis(Drivetrain drivetrain, Sensors sensors, Constraints late
       lateralPID(lateralSettings.kP, lateralSettings.kI, lateralSettings.kD, lateralSettings.windupRange, lateralSettings.settleError, lateralSettings.settleTime, lateralSettings.timeout),
       angularPID(angularSettings.kP, angularSettings.kI, angularSettings.kD, angularSettings.windupRange, angularSettings.settleError, angularSettings.settleTime, angularSettings.timeout), 
       swingPID(swingSettings.kP, swingSettings.kI, swingSettings.kD, swingSettings.windupRange, swingSettings.settleError, swingSettings.settleTime, swingSettings.timeout){}
+
+// lunar::Chassis::leftDist = 0;
+// lunar::Chassis::rightDist = 0;
 
 void lunar::Chassis::callibrate(){
     sensors.imu->reset();
@@ -126,27 +130,36 @@ void lunar::Chassis::driveDist(float dist){
 }
 
 void lunar::Chassis::driveDist(float dist, float heading, driveDistParams params, turnHeadingParams params1){
-    lunar::Chassis::leftDist = drivetrain.leftMotors->get_position()*drivetrain.gearRatio;
-    lunar::Chassis::rightDist = drivetrain.rightMotors->get_position()*drivetrain.gearRatio;
-    float start_average_position = (lunar::Chassis::leftDist+lunar::Chassis::rightDist)/2.0;
+    leftDist = (drivetrain.leftMotors->get_position()/360)*drivetrain.gearRatio*drivetrain.wheelDiameter*3.14;
+    rightDist = (drivetrain.rightMotors->get_position()/360)*drivetrain.gearRatio*drivetrain.wheelDiameter*3.14;
+    float start_average_position = (leftDist+rightDist)/2.0;
     float average_position = start_average_position;
     while(lateralPID.is_settled() == false){
-        average_position = (lunar::Chassis::leftDist+lunar::Chassis::rightDist)/2.0;
-        float drive_error = dist+start_average_position-average_position;
-        float heading_error = reduce_negative_180_to_180(heading - sensors.imu->get_heading());
+      leftDist = (drivetrain.leftMotors->get_position()*(drivetrain.gearRatio/360)*drivetrain.wheelDiameter*3.14);
+      rightDist = (drivetrain.rightMotors->get_position()*(drivetrain.gearRatio/360)*drivetrain.wheelDiameter*3.14);
+      average_position = (leftDist+rightDist)/2.0;
+      float drive_error = dist+start_average_position-average_position;
+      float heading_error = reduce_negative_180_to_180(heading - sensors.imu->get_heading());
 
-        if (params.minSpeed != 0 && fabs(drive_error) < params.earlyExit) break;
-        else if (params.minSpeed != 0 && fabs(heading_error) < params.earlyExit) break;
+      // printf("Drive Error: %f \n", drive_error);
+      // pros::lcd::print(2, "d: %f", drivetrain.leftMotors->get_position());
+      // pros::lcd::print(2, "gr: %f", drivetrain.gearRatio);
+      pros::lcd::print(4, "l: %f", leftDist);
+      // pros::lcd::print(3, "r: %f", rightDist);
+      pros::lcd::print(3, "Drive Error: %f", drive_error);
 
-        float drive_output = lateralPID.update(drive_error);
-        float heading_output = angularPID.update(heading_error);
+      if (params.minSpeed != 0 && fabs(drive_error) < params.earlyExit) break;
+      else if (params.minSpeed != 0 && fabs(heading_error) < params.earlyExit) break;
 
-        limit(drive_output, params.maxSpeed, params.minSpeed);
-        limit(heading_output, params.maxSpeed, params.minSpeed);
+      float drive_output = lateralPID.update(drive_error);
+      float heading_output = angularPID.update(heading_error);
 
-        drivetrain.leftMotors->move(drive_output+heading_output);
-        drivetrain.rightMotors->move(drive_output-heading_output);
-        pros::delay(10);
+      limit(drive_output, params.maxSpeed, params.minSpeed);
+      limit(heading_output, params1.maxSpeed, params1.minSpeed);
+
+      drivetrain.leftMotors->move(drive_output+heading_output);
+      drivetrain.rightMotors->move(drive_output-heading_output);
+      pros::delay(10);
     }
     cancelMotion("CHAIN");
 }

@@ -12,13 +12,13 @@
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::MotorGroup leftMotors({-13, -14, -15}, pros::MotorGearset::blue); // Left motor group - ports 13 (reversed), 14 (reversed), 15 (reversed)
-pros::MotorGroup rightMotors({16, 17, 18}, pros::MotorGearset::blue); // Right motor group - ports 16, 17, 18
+pros::MotorGroup leftMotors({-18, -19, -20}, pros::MotorGearset::blue); // Left motor group - ports 13 (reversed), 14 (reversed), 15 (reversed)
+pros::MotorGroup rightMotors({15, 16, 17}, pros::MotorGearset::blue); // Right motor group - ports 16, 17, 18
 
 // NOT PART OF TEMPLATE (Start)
-pros::Imu imu(12);
-pros::Motor intakebot(8);
-pros::Motor intaketop(-7);
+pros::Imu imu(10);
+pros::Motor intakebot(7);
+pros::Motor intaketop(-13);
 pros::Motor lift(9);
 
 pros::adi::DigitalOut mogo('A');
@@ -32,7 +32,7 @@ lunar::Drivetrain drivetrain(&leftMotors, // Left motor group
                               &rightMotors, // Right motor group
                               12.8, // Track width
                               3.25, // Wheel diameter
-							  (36/48) // Gear ratio
+							  0.75 // Gear ratio with decimals ( Gear Ratios are buggy )
 );
 
 lunar::Sensors sensors(&imu, // inertial sensor
@@ -43,13 +43,13 @@ lunar::Sensors sensors(&imu, // inertial sensor
 );
 
 // lateral motion controller
-lunar::Constraints lateralController(3, // proportional gain (kP)
+lunar::Constraints lateralController(7, // proportional gain (kP)
 									 0, // integral gain (kI)
 									 0, // derivative gain (kD)
 									 3, // anti windup
 									 1, // error range
 									 100, // error timeout in milliseconds
-									 1000 // total timeout in milliseconds
+									 10000 // total timeout in milliseconds
 );
 
 // angular motion controller
@@ -148,9 +148,10 @@ void autonomous() {
 	// NOT PART OF TEMPLATE (Start)
 	chassis.setHeading(0);
 	chassis.driveDist(24,0);
-	chassis.driveDist(24,0, {.minSpeed = 10, .earlyExit = 1}); // Early Exit for Motion Chaining
-	// pros::delay(10000000);
 	// chassis.turnHeading(90);
+	// chassis.driveDist(24,0, {.minSpeed = 10, .earlyExit = 1}); // Early Exit for Motion Chaining
+	// pros::delay(10000000);
+	
 	// chassis.lSwing(90);
 	// chassis.rSwing(90);
 	// NOT PART OF TEMPLATE (End)
@@ -190,7 +191,11 @@ void opcontrol() {
 	double RightCurveScale = 0.5; // Right Curve with curve of 0.5
 
 	while(1){
-
+		float lD = (drivetrain.leftMotors->get_position()*(drivetrain.gearRatio/360)*drivetrain.wheelDiameter*3.14);
+		float rD = (drivetrain.rightMotors->get_position()*(drivetrain.gearRatio/360)*drivetrain.wheelDiameter*3.14);
+		float avg1 = (lD+rD)/2.0;
+		pros::lcd::print(2, "avg d: %f", avg1);
+		
 /*   /$$$$$$$  /$$$$$$$  /$$$$$$ /$$    /$$ /$$$$$$$$ /$$$$$$$ 
 	| $$__  $$| $$__  $$|_  $$_/| $$   | $$| $$_____/| $$__  $$
 	| $$  \ $$| $$  \ $$  | $$  | $$   | $$| $$      | $$  \ $$
@@ -245,7 +250,7 @@ void opcontrol() {
                                                     
 		// Hook + Flexwheel Motors
 		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intaketop.move(127); intakebot.move(127); }
-		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intaketop.move(127);  intakebot.move(-127); }
+		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intaketop.move(-127);  intakebot.move(-127); }
 		else { intakebot.move(0); intaketop.move(0); }
 
 		// Wall Stakes Motor
