@@ -19,13 +19,16 @@ pros::MotorGroup rightMotors({15, 16, 17}, pros::MotorGearset::blue); // Right m
 pros::Imu imu(10);
 pros::Motor intakebot(7);
 pros::Motor intaketop(-13);
-pros::Motor lift(9);
+pros::Motor lift(-9);
 
 pros::adi::DigitalOut mogo('A');
-pros::adi::DigitalOut stick('B');
-pros::adi::DigitalOut claw('C');
+// pros::adi::DigitalOut stick('B');
+// pros::adi::DigitalOut claw('C');
 
 pros::adi::DigitalIn limitSwitch('F');
+pros::adi::AnalogIn lineTracker(8);
+// pros::ADIAnalogIn lineTracker(8);
+
 // NOT PART OF TEMPLATE (End)
 
 lunar::Drivetrain drivetrain(&leftMotors, // Left motor group
@@ -53,9 +56,9 @@ lunar::Constraints lateralController(7, // proportional gain (kP)
 );
 
 // angular motion controller
-lunar::Constraints angularController(1, // proportional gain (kP)
+lunar::Constraints angularController(0.6, // proportional gain (kP)
 									 0, // integral gain (kI)
-									 0, // derivative gain (kD)
+									 0.8, // derivative gain (kD)
 									 3, // anti windup
 									 1, // error range
 									 100, // error timeout in milliseconds
@@ -73,6 +76,19 @@ lunar::Constraints swingController(3, // proportional gain (kP)
 );
 
 lunar::Chassis chassis(drivetrain, sensors, lateralController, angularController, swingController);
+
+// int state;
+
+// int redirectTask(){
+// 	while(1){
+// 		if(state == FWD) { intaketop.move(127); intakebot.move(127); }
+// 		else if(state == REV) { intaketop.move(-127);  intakebot.move(-127); }
+// 		else if(state == RED) { intaketop.move(-127); }
+// 		else { intakebot.move(0); intaketop.move(0); }
+// 		pros::delay(10);
+// 	}
+// 	return 1;
+// }
 
 // Path names: 
 // Test, Pos Red, Neg Red, Pos Blue, Neg Blue, Skills
@@ -147,10 +163,10 @@ void autonomous() {
 
 	// NOT PART OF TEMPLATE (Start)
 	chassis.setHeading(0);
-	chassis.driveDist(24,0);
-	// chassis.turnHeading(90);
+	// chassis.driveDist(24,0);
+	chassis.turnHeading(90);
 	// chassis.driveDist(24,0, {.minSpeed = 10, .earlyExit = 1}); // Early Exit for Motion Chaining
-	// pros::delay(10000000);
+	pros::delay(10000000);
 	
 	// chassis.lSwing(90);
 	// chassis.rSwing(90);
@@ -185,6 +201,7 @@ void opcontrol() {
 	bool mogoc = false;
 	bool clawc = false;
 	bool stickc = false;
+	bool intakestate = false;
 
 	// Drive Curve Settings
 	double leftCurveScale = 0.5; // Left Curve with curve of 0.5
@@ -228,16 +245,16 @@ void opcontrol() {
             mogo.set_value(mogoc);
         }
 
-		// Stick
-		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-            stickc = !stickc; 
-            stick.set_value(stickc);
-        }
-		// Claw
-		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-            clawc = !clawc; 
-            claw.set_value(clawc);
-        }
+		// // Stick
+		// if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+        //     stickc = !stickc; 
+        //     stick.set_value(stickc);
+        // }
+		// // Claw
+		// if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+        //     clawc = !clawc; 
+        //     claw.set_value(clawc);
+        // }
 		
 /*   /$$      /$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$$ 
 	| $$$    /$$$ /$$__  $$|__  $$__//$$__  $$| $$__  $$
@@ -249,14 +266,24 @@ void opcontrol() {
 	|__/     |__/ \______/    |__/   \______/ |__/  |__/    */
                                                     
 		// Hook + Flexwheel Motors
-		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intaketop.move(127); intakebot.move(127); }
-		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intaketop.move(-127);  intakebot.move(-127); }
-		else { intakebot.move(0); intaketop.move(0); }
+
+		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+            intakestate =! intakestate;
+        }
+
+		if(intakestate == 0){
+			if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { intaketop.move(127); intakebot.move(127); }
+			else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { intaketop.move(-127);  intakebot.move(-127); }
+			else { intakebot.move(0); intaketop.move(0); }
+		}
+		else if(intakestate == 1){
+			if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { intaketop.move(127); intakebot.move(127); } // WaitUntil linetracker thingy then reverse then setback
+		}
 
 		// Wall Stakes Motor
-		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { lift.move(127); }
-		else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { lift.move(-127); }
-		else { lift.set_brake_mode_all(pros::v5::MotorBrake::hold); lift.brake(); }
+			if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { lift.move(127); }
+			else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { lift.move(-127); }
+			else { lift.set_brake_mode_all(pros::v5::MotorBrake::hold); lift.brake(); }
 
 		pros::delay(10);
 	}
