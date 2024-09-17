@@ -1,5 +1,6 @@
 >[!IMPORTANT]
-> LunarLib is compatible with a custom path generator. You can find the link [here](https://nicksonchen2008.github.io/78181A-Auton-Planner-main/)
+> LunarLib is compatible with a custom path generator. You can find the link [here](https://LunarC1.github.io/78181A-Auton-Planner-main/)
+> LunarLib is compatible with a custom auton selector. You can find the link [here](https://github.com/LunarC1/LunarSelector)
 
 Welcome to LunarLib! This PROS Template is still under development.
 
