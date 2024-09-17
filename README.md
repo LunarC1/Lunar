@@ -7,6 +7,7 @@ Welcome to LunarLib! This PROS Template is still under development.
 
 ## Features
 - Supports Custom Path Planner
+- LVGL Autonomous Selector
 - Generic PID class
 - Motion Chaining
   - Drive Distance with heading correction
@@ -23,7 +24,6 @@ Welcome to LunarLib! This PROS Template is still under development.
 - Move to Point
 - Turn to Point
 - Move to Pose (Boomerang Controller)
-- LVGL Autonomous Selector
 - Documentation w/ Example Project
 - LVGL Debugger ( Includes PID, Odom, etc )
 - Auto PID Tuner
