@@ -15,5 +15,3 @@ float clamp(float input, float min, float max);
 float deadband(float input, float width);
 
 float limit(float input, float min, float max);
-
-float avg(std::vector<float> values);

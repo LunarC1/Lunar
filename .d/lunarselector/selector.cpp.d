@@ -1,16 +1,11 @@
-bin/main.cpp.o: src/main.cpp include/main.h include/api.h \
- include/pros/adi.h include/pros/colors.h include/pros/device.h \
- include/pros/distance.h include/pros/error.h include/pros/ext_adi.h \
- include/pros/adi.h include/pros/adi.h include/pros/gps.h \
- include/pros/imu.h include/pros/link.h include/pros/llemu.h \
- include/liblvgl/llemu.h include/liblvgl/lvgl.h \
- include/liblvgl/misc/lv_log.h include/liblvgl/lv_conf_internal.h \
- include/liblvgl/lv_conf_kconfig.h include/liblvgl/lv_conf.h \
- include/liblvgl/misc/lv_types.h include/liblvgl/misc/lv_timer.h \
- include/liblvgl/hal/lv_hal_tick.h include/liblvgl/misc/lv_math.h \
- include/liblvgl/misc/lv_mem.h include/liblvgl/misc/lv_async.h \
- include/liblvgl/misc/lv_anim_timeline.h include/liblvgl/misc/lv_anim.h \
- include/liblvgl/misc/lv_printf.h \
+bin/lunarselector/selector.cpp.o: src/lunarselector/selector.cpp \
+ include/liblvgl/lvgl.h include/liblvgl/misc/lv_log.h \
+ include/liblvgl/lv_conf_internal.h include/liblvgl/lv_conf_kconfig.h \
+ include/liblvgl/lv_conf.h include/liblvgl/misc/lv_types.h \
+ include/liblvgl/misc/lv_timer.h include/liblvgl/hal/lv_hal_tick.h \
+ include/liblvgl/misc/lv_math.h include/liblvgl/misc/lv_mem.h \
+ include/liblvgl/misc/lv_async.h include/liblvgl/misc/lv_anim_timeline.h \
+ include/liblvgl/misc/lv_anim.h include/liblvgl/misc/lv_printf.h \
  include/liblvgl/misc/../lv_conf_internal.h include/liblvgl/hal/lv_hal.h \
  include/liblvgl/hal/lv_hal_disp.h include/liblvgl/hal/lv_hal.h \
  include/liblvgl/draw/lv_draw.h include/liblvgl/misc/lv_style.h \
@@ -113,7 +108,12 @@ bin/main.cpp.o: src/main.cpp include/main.h include/api.h \
  include/liblvgl/extra/widgets/colorwheel/lv_colorwheel.h \
  include/liblvgl/extra/widgets/led/lv_led.h \
  include/liblvgl/extra/widgets/imgbtn/lv_imgbtn.h \
- include/liblvgl/extra/widgets/span/lv_span.h include/pros/misc.h \
+ include/liblvgl/extra/widgets/span/lv_span.h include/lunar/api.hpp \
+ include/main.h include/api.h include/pros/adi.h include/pros/colors.h \
+ include/pros/device.h include/pros/distance.h include/pros/error.h \
+ include/pros/ext_adi.h include/pros/adi.h include/pros/adi.h \
+ include/pros/gps.h include/pros/imu.h include/pros/link.h \
+ include/pros/llemu.h include/liblvgl/llemu.h include/pros/misc.h \
  include/pros/motors.h include/pros/optical.h include/pros/error.h \
  include/pros/rotation.h include/pros/rtos.h include/pros/screen.h \
  include/pros/colors.h include/pros/vision.h include/pros/adi.hpp \
@@ -129,25 +129,8 @@ bin/main.cpp.o: src/main.cpp include/main.h include/api.h \
  include/pros/motors.hpp include/pros/optical.hpp include/pros/optical.h \
  include/pros/rotation.hpp include/pros/rotation.h include/pros/rtos.hpp \
  include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
- include/pros/vision.h include/lunar/api.hpp include/lunar/PID.hpp \
- include/lunar/chassis.hpp include/pros/imu.hpp \
- include/pros/motor_group.hpp include/lunar/util.hpp \
- include/lunarselector/selector.h
-include/main.h:
-include/api.h:
-include/pros/adi.h:
-include/pros/colors.h:
-include/pros/device.h:
-include/pros/distance.h:
-include/pros/error.h:
-include/pros/ext_adi.h:
-include/pros/adi.h:
-include/pros/adi.h:
-include/pros/gps.h:
-include/pros/imu.h:
-include/pros/link.h:
-include/pros/llemu.h:
-include/liblvgl/llemu.h:
+ include/pros/vision.h include/lunar/PID.hpp include/lunar/chassis.hpp \
+ include/pros/imu.hpp include/pros/motor_group.hpp include/lunar/util.hpp
 include/liblvgl/lvgl.h:
 include/liblvgl/misc/lv_log.h:
 include/liblvgl/lv_conf_internal.h:
@@ -303,6 +286,22 @@ include/liblvgl/extra/widgets/colorwheel/lv_colorwheel.h:
 include/liblvgl/extra/widgets/led/lv_led.h:
 include/liblvgl/extra/widgets/imgbtn/lv_imgbtn.h:
 include/liblvgl/extra/widgets/span/lv_span.h:
+include/lunar/api.hpp:
+include/main.h:
+include/api.h:
+include/pros/adi.h:
+include/pros/colors.h:
+include/pros/device.h:
+include/pros/distance.h:
+include/pros/error.h:
+include/pros/ext_adi.h:
+include/pros/adi.h:
+include/pros/adi.h:
+include/pros/gps.h:
+include/pros/imu.h:
+include/pros/link.h:
+include/pros/llemu.h:
+include/liblvgl/llemu.h:
 include/pros/misc.h:
 include/pros/motors.h:
 include/pros/optical.h:
@@ -347,10 +346,8 @@ include/pros/screen.hpp:
 include/pros/screen.h:
 include/pros/vision.hpp:
 include/pros/vision.h:
-include/lunar/api.hpp:
 include/lunar/PID.hpp:
 include/lunar/chassis.hpp:
 include/pros/imu.hpp:
 include/pros/motor_group.hpp:
 include/lunar/util.hpp:
-include/lunarselector/selector.h:

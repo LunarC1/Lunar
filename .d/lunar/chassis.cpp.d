@@ -4,20 +4,18 @@ bin/lunar/chassis.cpp.o: src/lunar/chassis.cpp include/pros/imu.hpp \
  include/pros/motors.h include/lunar/chassis.hpp include/lunar/PID.hpp \
  include/pros/motor_group.hpp include/pros/abstract_motor.hpp \
  include/pros/rtos.hpp include/pros/colors.hpp include/pros/motors.hpp \
- include/lunar/trackingWheel.hpp include/pros/adi.hpp include/pros/adi.h \
- include/pros/rotation.hpp include/pros/rotation.h include/lunar/api.hpp \
- include/lunar/util.hpp include/main.h include/api.h include/pros/adi.h \
+ include/lunar/api.hpp include/main.h include/api.h include/pros/adi.h \
  include/pros/colors.h include/pros/device.h include/pros/distance.h \
  include/pros/error.h include/pros/ext_adi.h include/pros/adi.h \
- include/pros/gps.h include/pros/imu.h include/pros/link.h \
- include/pros/llemu.h include/liblvgl/llemu.h include/liblvgl/lvgl.h \
- include/liblvgl/misc/lv_log.h include/liblvgl/lv_conf_internal.h \
- include/liblvgl/lv_conf_kconfig.h include/liblvgl/lv_conf.h \
- include/liblvgl/misc/lv_types.h include/liblvgl/misc/lv_timer.h \
- include/liblvgl/hal/lv_hal_tick.h include/liblvgl/misc/lv_math.h \
- include/liblvgl/misc/lv_mem.h include/liblvgl/misc/lv_async.h \
- include/liblvgl/misc/lv_anim_timeline.h include/liblvgl/misc/lv_anim.h \
- include/liblvgl/misc/lv_printf.h \
+ include/pros/adi.h include/pros/gps.h include/pros/imu.h \
+ include/pros/link.h include/pros/llemu.h include/liblvgl/llemu.h \
+ include/liblvgl/lvgl.h include/liblvgl/misc/lv_log.h \
+ include/liblvgl/lv_conf_internal.h include/liblvgl/lv_conf_kconfig.h \
+ include/liblvgl/lv_conf.h include/liblvgl/misc/lv_types.h \
+ include/liblvgl/misc/lv_timer.h include/liblvgl/hal/lv_hal_tick.h \
+ include/liblvgl/misc/lv_math.h include/liblvgl/misc/lv_mem.h \
+ include/liblvgl/misc/lv_async.h include/liblvgl/misc/lv_anim_timeline.h \
+ include/liblvgl/misc/lv_anim.h include/liblvgl/misc/lv_printf.h \
  include/liblvgl/misc/../lv_conf_internal.h include/liblvgl/hal/lv_hal.h \
  include/liblvgl/hal/lv_hal_disp.h include/liblvgl/hal/lv_hal.h \
  include/liblvgl/draw/lv_draw.h include/liblvgl/misc/lv_style.h \
@@ -130,8 +128,9 @@ bin/lunar/chassis.cpp.o: src/lunar/chassis.cpp include/pros/imu.hpp \
  include/pros/link.h include/pros/llemu.hpp include/liblvgl/llemu.hpp \
  include/pros/misc.hpp include/pros/motor_group.hpp \
  include/pros/motors.hpp include/pros/optical.hpp include/pros/optical.h \
- include/pros/rotation.hpp include/pros/rtos.hpp include/pros/screen.hpp \
- include/pros/screen.h include/pros/vision.hpp include/pros/vision.h
+ include/pros/rotation.hpp include/pros/rotation.h include/pros/rtos.hpp \
+ include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
+ include/pros/vision.h include/lunar/util.hpp
 include/pros/imu.hpp:
 include/pros/device.hpp:
 include/pros/misc.hpp:
@@ -147,13 +146,7 @@ include/pros/abstract_motor.hpp:
 include/pros/rtos.hpp:
 include/pros/colors.hpp:
 include/pros/motors.hpp:
-include/lunar/trackingWheel.hpp:
-include/pros/adi.hpp:
-include/pros/adi.h:
-include/pros/rotation.hpp:
-include/pros/rotation.h:
 include/lunar/api.hpp:
-include/lunar/util.hpp:
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -162,6 +155,7 @@ include/pros/device.h:
 include/pros/distance.h:
 include/pros/error.h:
 include/pros/ext_adi.h:
+include/pros/adi.h:
 include/pros/adi.h:
 include/pros/gps.h:
 include/pros/imu.h:
@@ -350,8 +344,10 @@ include/pros/motors.hpp:
 include/pros/optical.hpp:
 include/pros/optical.h:
 include/pros/rotation.hpp:
+include/pros/rotation.h:
 include/pros/rtos.hpp:
 include/pros/screen.hpp:
 include/pros/screen.h:
 include/pros/vision.hpp:
 include/pros/vision.h:
+include/lunar/util.hpp:

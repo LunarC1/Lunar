@@ -57,9 +57,3 @@ float limit(float input, float min, float max){
 
   return (input);
 }
-
-float avg(std::vector<float> values) {
-  float sum = 0;
-  for (float value : values) { sum += value; }
-  return sum / values.size();
-}

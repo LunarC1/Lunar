@@ -5,7 +5,6 @@
 
 #include "lunar/PID.hpp"
 #include "pros/motor_group.hpp"
-#include "lunar/trackingWheel.hpp"
 
 #include <string>
 
@@ -13,13 +12,8 @@ namespace lunar{
 
 class Sensors{
     public:
-        Sensors(pros::Imu* imu, TrackingWheel* vertical1, TrackingWheel* vertical2, TrackingWheel* horizontal1,
-                    TrackingWheel* horizontal2);
+        Sensors(pros::Imu* imu);
         pros::Imu* imu;
-        TrackingWheel* vertical1;
-        TrackingWheel* vertical2;
-        TrackingWheel* horizontal1;
-        TrackingWheel* horizontal2;
 };
 
 class Constraints{
@@ -78,8 +72,8 @@ class Chassis{
     public:
         Chassis(Drivetrain drivetrain, Sensors sensors, Constraints lateralSettings, Constraints angularSettings, Constraints swingSettings);
         
-        float leftDist = 0;
-        float rightDist = 0;
+        int leftDist;
+        int rightDist;
 
         void callibrate();
         void setHeading(float angle);

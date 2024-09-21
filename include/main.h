@@ -53,6 +53,38 @@
 // using namespace pros::literals;
 // using namespace okapi;
 
+extern pros::Controller controller;
+
+extern pros::MotorGroup leftMotors;
+extern pros::MotorGroup rightMotors;
+
+// NOT PART OF TEMPLATE (Start)
+extern pros::Imu imu;
+extern pros::Motor intakebot;
+extern pros::Motor intaketop;
+extern pros::Motor lift;
+
+extern pros::adi::DigitalOut mogo;
+extern pros::adi::DigitalOut stick;
+extern pros::adi::DigitalOut claw;
+
+extern pros::adi::DigitalIn limitSwitch;
+
+// extern lunar::Drivetrain drivetrain;
+
+// extern lunar::Sensors sensors;
+
+// // lateral motion controller
+// extern lunar::Constraints lateralController;
+
+// // angular motion controller
+// extern lunar::Constraints angularController;
+
+// // swing motion controller
+// extern lunar::Constraints swingController;
+
+// extern lunar::Chassis chassis;
+
 /**
  * Prototypes for the competition control tasks are redefined here to ensure
  * that they can be called from user code (i.e. calling autonomous from a
